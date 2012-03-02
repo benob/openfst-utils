@@ -401,9 +401,9 @@ namespace fst {
             CategorialWeightIterator<L, CATEGORIAL_LEFT> iter2(w2);
             for (; !iter1.Done() && !iter2.Done(); iter1.Next(), iter2.Next()) {
                 if(iter1.Value() < iter2.Value()) return w1;
-                if(iter1.Value() > iter2.Value()) return w2;
+                else if(iter1.Value() > iter2.Value()) return w2;
             }
-            if(iter1.Done()) return w1;
+            if(!iter2.Done()) return w1;
             return w2;
         }
 
@@ -421,9 +421,9 @@ namespace fst {
             CategorialWeightIterator<L, CATEGORIAL_RIGHT> iter2(w2);
             for (; !iter1.Done() && !iter2.Done(); iter1.Next(), iter2.Next()) {
                 if(iter1.Value() < iter2.Value()) return w1;
-                if(iter1.Value() > iter2.Value()) return w2;
+                else if(iter1.Value() > iter2.Value()) return w2;
             }
-            if(iter1.Done()) return w1;
+            if(!iter2.Done()) return w1;
             return w2;
         }
 
@@ -435,8 +435,18 @@ namespace fst {
                 return CategorialWeight<L, S>::Zero();
 
             CategorialWeight<L, S> prod(w1);
+            if(w1.Size() > 0) {
+                //prod.PushFront(kCategorialLeftBracket);
+                //prod.PushBack(kCategorialRightBracket);
+            }
+            ////if(w2.Size() > 0) prod.PushBack(kCategorialLeftBracket);
             for (CategorialWeightIterator<L, S> iter(w2); !iter.Done(); iter.Next())
                 prod.PushBack(iter.Value());
+            ////if(w2.Size() > 0) prod.PushBack(kCategorialRightBracket);
+            /*cerr << "TIMES ";
+            cerr << w1 << " ";
+            cerr << w2 << " ";
+            cerr << prod << endl;*/
 
             return prod;
         }
@@ -458,20 +468,33 @@ namespace fst {
             else if (w1 == CategorialWeight<L, S>::Zero())
                 return CategorialWeight<L, S>::Zero();
 
+            if(w1 == w2) return CategorialWeight<L, S>::One();
             CategorialWeight<L, S> div;
             CategorialWeightIterator<L, S> iter1(w1);
             CategorialWeightIterator<L, S> iter2(w2);
-            if(w1.Size() > 1) div.PushBack(kCategorialLeftBracket);
+            bool needsBrackets = false;
+            for (; !iter2.Done(); iter2.Next()) {
+                if(iter2.Value() == kCategorialLeftDiv) {
+                    needsBrackets = true;
+                    break;
+                }
+            }
+            iter2.Reset();
+            if(needsBrackets) div.PushBack(kCategorialLeftBracket);
             for (; !iter2.Done(); iter2.Next()) {
                 div.PushBack(iter2.Value());
             }
-            if(w1.Size() > 1) div.PushBack(kCategorialRightBracket);
+            if(needsBrackets) div.PushBack(kCategorialRightBracket);
             div.PushBack(kCategorialLeftDiv);
-            if(w2.Size() > 1) div.PushBack(kCategorialLeftBracket);
+            //if(w2.Size() > 0) div.PushBack(kCategorialLeftBracket);
             for (; !iter1.Done(); iter1.Next()) {
                 div.PushBack(iter1.Value());
             }
-            if(w2.Size() > 1) div.PushBack(kCategorialRightBracket);
+            //if(w2.Size() > 0) div.PushBack(kCategorialRightBracket);
+            /*cerr << "DIV ";
+            cerr << w1 << " ";
+            cerr << w2 << " ";
+            cerr << div << endl;*/
             return div;
         }
 
