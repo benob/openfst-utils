@@ -4,166 +4,7 @@
 
 using namespace fst;
 
-/*namespace fst {
-
-    const int kCategorialNodeEpsilon = 0;
-    const int kCategorialNodeInfinity = -1;
-    const int kCategorialNodeError = -2;
-    const int kCategorialNodeTimes = -3;
-    const int kCategorialNodeDivide = -4;
-
-    class CategorialNode {
-        int label;
-        const CategorialNode *left;
-        const CategorialNode *right;
-
-        public:
-
-        CategorialNode() : label(kCategorialNodeEpsilon), left(NULL), right(NULL) {}
-        CategorialNode(int _label) : label(_label), left(NULL), right(NULL) {}
-        CategorialNode(int _label, const CategorialNode* _left, const CategorialNode* _right) : label(_label), left(_left), right(_right) {}
-
-        typedef CategorialNode ReverseWeight;
-        size_t Size() const {
-            if(label == kCategorialNodeEpsilon) return 0;
-            size_t output = 1;
-            if(left != NULL) output += left->Size();
-            if(right != NULL) output += right->Size();
-            return output;
-        }
-        static CategorialNode One() {
-            return CategorialNode(kCategorialNodeEpsilon);
-        }
-        static CategorialNode Zero() {
-            return CategorialNode(kCategorialNodeInfinity);
-        }
-        static const std::string& Type() {
-            static const std::string type = "categorial";
-            return type;
-        }
-        std::list<int> Value() const {
-            std::list<int> output;
-            crawl(output);
-            return output;
-        }
-        void crawl(std::list<int> &values) const {
-            if(left != NULL) left->crawl(values);
-            if(label != kCategorialNodeEpsilon) values.push_back(label);
-            if(right != NULL) right->crawl(values);
-        }
-        CategorialNode& operator=(const CategorialNode& other) {
-            label = other.label;
-            left = other.left;
-            right = other.right;
-            return *this;
-        }
-        bool Member() const {
-            return label == kCategorialNodeError;
-        }
-        size_t Hash() const {
-            size_t output = label;
-            if(left != NULL) output = (output << 1) ^ left->Hash();
-            if(right != NULL) output = (output << 1) ^ right->Hash();
-            return output;
-        }
-
-        CategorialNode Quantize(float delta) const {
-            return *this;
-        }
-
-        CategorialNode Reverse() const {
-            return *this;
-        }
-
-        static uint64 Properties() {
-            return kLeftSemiring | kRightSemiring | kCommutative | kPath | kIdempotent;
-        }
-
-        ostream& Write(ostream& strm) const {
-            cerr << "ERROR: Write() called" << endl;
-            //operator<<(strm, *this);
-            return strm;
-        }
-
-        ostream& Read(ostream& strm) const {
-            cerr << "ERROR: Read() called" << endl;
-            //strm >> *this;
-            return strm;
-        }
-    };
-
-    bool operator==(const CategorialNode& first, const CategorialNode& second) {
-        std::list<int> first_labels;
-        std::list<int> second_labels;
-        if(first.Size() != second.Size()) return false;
-        first.crawl(first_labels);
-        second.crawl(second_labels);
-        std::list<int>::iterator iter_first = first_labels.begin();
-        std::list<int>::iterator iter_second = second_labels.begin();
-        while(iter_first != first_labels.end()) {
-            if(*iter_first != *iter_second) return false;
-            iter_first++;
-            iter_second++;
-        }
-        return true;
-    }
-
-    bool operator!=(const CategorialNode& first, const CategorialNode& second) {
-        return !(first == second);
-    }
-
-    // lexicographic order
-    bool operator<(const CategorialNode& first, const CategorialNode& second) {
-        std::list<int> first_labels;
-        std::list<int> second_labels;
-        first.crawl(first_labels);
-        second.crawl(second_labels);
-        std::list<int>::iterator iter_first = first_labels.begin();
-        std::list<int>::iterator iter_second = second_labels.begin();
-        while(iter_first != first_labels.end() && iter_second != second_labels.end()) {
-            if(*iter_first < *iter_second) return true;
-            else if(*iter_first > *iter_second) return false;
-            iter_first++;
-            iter_second++;
-        }
-        if(iter_first != first_labels.end()) return false;
-        return true;
-    }
-    bool ApproxEqual(const CategorialNode& first, const CategorialNode& second, float delta) {
-        return first == second;
-    }
-
-    inline CategorialNode Plus(const CategorialNode& first, const CategorialNode& second) {
-        if(first < second) return first;
-        return second;
-    }
-
-    inline CategorialNode Times(const CategorialNode& first, const CategorialNode& second) {
-        if(first == CategorialNode::Zero() || second == CategorialNode::Zero()) return CategorialNode::Zero();
-        return CategorialNode(kCategorialNodeTimes, &first, &second);
-    }
-
-    inline CategorialNode Divide(const CategorialNode& first, const CategorialNode& second, DivideType typ = DIVIDE_ANY) {
-        if(first == second) return CategorialNode::One();
-        if(second == CategorialNode::Zero()) return CategorialNode(kCategorialNodeError);
-        if(first == CategorialNode::Zero()) return CategorialNode::Zero();
-        return CategorialNode(kCategorialNodeDivide, &second, &first);
-    }
-    inline ostream &operator<<(ostream &strm, const CategorialNode &weight) {
-        std::list<int> labels = weight.Value();
-        for(std::list<int>::const_iterator i = labels.begin(); i != labels.end(); i++) {
-            if(i != labels.begin()) strm << ",";
-            if(*i == kCategorialNodeDivide) strm << "\\";
-            else if(*i == kCategorialNodeTimes) strm << "_";
-            else strm << *i;
-        }
-        return strm;
-    }
-
-}*/
-
 typedef CategorialWeight<int,CATEGORIAL_LEFT> StdCategorialWeight;
-//typedef CategorialNode StdCategorialWeight;
 typedef LexicographicWeight<TropicalWeight,StdCategorialWeight> TCLexWeight;
 typedef LexicographicArc<TropicalWeight,StdCategorialWeight> TCLexArc;
 typedef VectorFst<TCLexArc> TCLexFst;
@@ -341,21 +182,29 @@ int main(int argc, char** argv) {
     StdVectorFst *input = StdVectorFst::Read("");
     TCLexFst converted, determinized;
     StdVectorFst back_to_syms, mapper;
+    cerr << "Remove epsilons\n";
+    if(input->Properties(kEpsilons, true)) RmEpsilon(input);
+    cerr << "Convert to <T,C>-lexicographic semiring\n";
     convertToTCLexSemiring(*input, converted);
     //print(converted, input->InputSymbols(), input->OutputSymbols());
+    cerr << "Determinize\n";
     Determinize(converted, &determinized);
     SymbolTable symbols("tclex");
     //symbols.AddTable(*(input->OutputSymbols()));
+    cerr << "Get symbol table\n";
     convertToTCLexSymbols(determinized, back_to_syms, symbols);
+    cerr << "Build mapper\n";
     buildMapper(mapper, symbols);
     back_to_syms.SetInputSymbols(input->InputSymbols());
     back_to_syms.SetOutputSymbols(&symbols);
+    //back_to_syms.Write("");
     mapper.SetInputSymbols(&symbols);
     mapper.SetOutputSymbols(input->OutputSymbols());
     //mapper.Write("");
     //StdComposeFst result(back_to_syms, mapper);
     StdVectorFst result;
     ArcSort(&mapper, ILabelCompare<StdArc>());
+    cerr << "Compose with mapper\n";
     Compose(back_to_syms, mapper, &result);
     result.Write("");
     /*back_to_syms.SetInputSymbols(input->InputSymbols());
