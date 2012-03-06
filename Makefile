@@ -1,4 +1,4 @@
-CPPFLAGS:=-lfst -lfstscript -g -Wall
+CPPFLAGS:=$(CFLAGS) -lfst -g -Wall
 all: fstcompile-nolex add-tags ngram-expand fstminimize-transducer fstdeterminize-tc-lex
 %: %.cc
 	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
