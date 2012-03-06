@@ -294,8 +294,8 @@ int main(int argc, char** argv) {
     
     // compose to generate final automaton 
     StdVectorFst result;
-    result.SetOutputSymbols(input->OutputSymbols());
     Compose(back_to_syms, decoder, &result);
+    result.SetOutputSymbols(input->OutputSymbols());
 
     // write result to stdout
     result.Write("");
