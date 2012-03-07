@@ -10,6 +10,10 @@ This is a set of useful programs for manipulating Finite State Transducer with t
 
 * fstdeterminize-tc-lex: keep the best tagging for each word sequence in a transducer using determinization in the (Tropical, Categorial)-Lexicographic semiring. See "Efficient Determinization of Tagged Word Lattices using Categorial and Lexicographic Semirings", by Izhak Shafran et al, ASRU 2011.
 
+* fstsuperfinal-noepsilon: add a superfinal state without adding epsilon arcs
+
+--- less useful / non-working stuff ---
+
 * add-tags <dict>: generate a tagging transducer from a word acceptor according to a tab-separated, one-word-per-line tag dictionary
 
 * ngram-expand: expand transducer so that each arc has a fixed context of up to n-1 arcs (so called ngramize) -- non functional at this time
