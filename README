@@ -6,6 +6,8 @@ This is a set of useful programs for manipulating Finite State Transducer with t
 
 * fstcompile-nolex [-t]: compile an acceptor [transducer], generate symbol lexicons on the fly and save them with the fst. Useful for quick hacks on a single fst.
 
+* fstcompose-maplex <fst1> <fst2>: compose after mapping symbol tables (for use with fstcompile-nolex which generates different symbol tables) fst1 or fst2 can be "" (empty string) which means stdin.
+
 * fstminimize-transducer: encode input/output, rmepsilon, determinize, minimize and decode in one pass.
 
 * fstdeterminize-tc-lex: keep the best tagging for each word sequence in a transducer using determinization in the (Tropical, Categorial)-Lexicographic semiring. See "Efficient Determinization of Tagged Word Lattices using Categorial and Lexicographic Semirings", by Izhak Shafran et al, ASRU 2011.
