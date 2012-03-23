@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
     Relabel(input1, NULL, symbolMap);
     Relabel(input2, symbolMap, NULL);
     input1->SetOutputSymbols(symbolMap);
+    ArcSort(input1, StdOLabelCompare());
     input2->SetInputSymbols(symbolMap);
     delete symbolMap;
     StdVectorFst composed;
