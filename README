@@ -14,6 +14,8 @@ This is a set of useful programs for manipulating Finite State Transducer with t
 
 * fstsuperfinal-noepsilon: add a superfinal state without adding epsilon arcs
 
+* fstoracle <fst1> <fst2>: compute the shortest distance alignment between two transducers
+
 --- less useful / non-working stuff ---
 
 * add-tags <dict>: generate a tagging transducer from a word acceptor according to a tab-separated, one-word-per-line tag dictionary
