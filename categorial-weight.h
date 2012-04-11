@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Copyright 2005-2010 Google, Inc.
-// Author: riley@google.com (Michael Riley)
+// Copyright 2012 Aix-Marseille Univ.
+// Author: benoit.favre@lif.univ-mrs.fr (Benoit Favre)
 //
 // \file
 // Categorial weight set and associated semiring operation definitions.

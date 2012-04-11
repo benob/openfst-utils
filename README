@@ -1,6 +1,7 @@
 Utilities for OpenFst
 ---------------------
 Benoit Favre <benoit.favre@lif.univ-mrs.fr>
+released under Apache License Version 2.0
 
 This is a set of useful programs for manipulating Finite State Transducer with the OpenFst library.
 
