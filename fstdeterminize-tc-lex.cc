@@ -139,6 +139,9 @@ namespace fst {
         typedef StdArc FromArc;
         typedef TCLexArc ToArc;
         TCLexArc operator()(const StdArc &arc) {
+            if(arc.weight == TropicalWeight::Zero()) {
+                return TCLexArc(arc.ilabel, arc.ilabel, TCLexWeight::Zero(), arc.nextstate);
+            }
             return TCLexArc(arc.ilabel, arc.ilabel, TCLexWeight(arc.weight, CategorialWeight(arc.olabel)), arc.nextstate);
         }
         MapFinalAction FinalAction() const { return MAP_NO_SUPERFINAL; }
