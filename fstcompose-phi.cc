@@ -18,8 +18,7 @@
 using namespace std;
 using namespace fst;
 
-typedef Fst<LogArc> LogFst;
-typedef PhiMatcher< SortedMatcher<LogFst> > PM;
+typedef PhiMatcher< SortedMatcher<StdFst> > PM;
 
 int main(int argc, char** argv) {
     if(argc != 2) {
@@ -27,15 +26,14 @@ int main(int argc, char** argv) {
         return 1;
     }
     int phiLabel = atoi(argv[1]);
-    VectorFst<LogArc>* mutableInput1 = VectorFst<LogArc>::Read(argv[2]);
-    VectorFst<LogArc>* mutableInput2 = VectorFst<LogArc>::Read("");
-    Fst<LogArc>* input1(mutableInput1);
-    ArcSort(*input1, OLabelCompare<LogArc>()); 
-    ComposeFstOptions<LogArc, PM> opts;
+    StdVectorFst* input1 = StdVectorFst::Read(argv[2]);
+    StdVectorFst* input2 = StdVectorFst::Read("");
+    ArcSort(input1, OLabelCompare<StdArc>()); 
+    ComposeFstOptions<StdArc, PM> opts;
     opts.gc_limit = 0;
-    opts.matcher1 = new PM(input1, MATCH_OUTPUT, phiLabel);
-    opts.matcher2 = new PM(input2, MATCH_NONE, kNoLabel);
+    opts.matcher1 = new PM(*input1, MATCH_OUTPUT, phiLabel);
+    opts.matcher2 = new PM(*input2, MATCH_NONE, kNoLabel);
     // composition
-    ComposeFst<LogArc> output(*input1, *input2, opts);
+    ComposeFst<StdArc> output(*input1, *input2, opts);
     output.Write("");
 }
