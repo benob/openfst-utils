@@ -17,10 +17,32 @@ This is a set of useful programs for manipulating Finite State Transducer with t
 
 * fstoracle <fst1> <fst2>: compute the shortest distance alignment between two transducers
 
+* fstcompose-phi: compose two transducers where the second has phi (failure) transitions -- transitions that match anything if any other match was not possible.
+
+sentence.fsm:
+0   1   the
+1   2   boy
+2   3   is
+3   4   here
+4
+
+model.fsm:
+0   0   <phi> <eps>
+0   1   boy XXX
+1   2   is YYY
+2   2   <phi> <eps>
+2
+
+cat sentence.fsm | ./fstcompose-phi '<phi>' model.fsm | fstprint
+0   1   the <eps>
+1   2   boy XXX
+2   3   is YYY
+3   4   here <eps>
+4
+
 --- less useful / non-working stuff ---
 
 * add-tags <dict>: generate a tagging transducer from a word acceptor according to a tab-separated, one-word-per-line tag dictionary
 
 * ngram-expand: expand transducer so that each arc has a fixed context of up to n-1 arcs (so called ngramize) -- non functional at this time
 
-* fstcompose-phi.cc: does not work yet

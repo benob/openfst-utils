@@ -25,25 +25,25 @@ int main(int argc, char** argv) {
         cerr << "usage: cat <input1> | " << argv[0] << " <phi-symbol> <input2>\n";
         return 1;
     }
-    StdVectorFst* input1 = StdVectorFst::Read(argv[2]);
-    StdVectorFst* input2 = StdVectorFst::Read("");
+    StdVectorFst* input1 = StdVectorFst::Read("");
+    StdVectorFst* input2 = StdVectorFst::Read(argv[2]);
     bool relabel;
     SymbolTable *symbolMap = MergeSymbolTable(*(input1->OutputSymbols()), *(input2->InputSymbols()), &relabel);
+    int64 phiLabel = symbolMap->Find(argv[1]);
     Relabel(input1, NULL, symbolMap);
     Relabel(input2, symbolMap, NULL);
     input1->SetOutputSymbols(symbolMap);
     ArcSort(input1, StdOLabelCompare());
+    ArcSort(input2, StdILabelCompare());
     input2->SetInputSymbols(symbolMap);
-    int64 phiLabel = symbolMap->AddSymbol(argv[1]);
-    std::cerr << "phi = " << phiLabel << " " << symbolMap->Find(phiLabel) << "\n";
-    ArcSort(input1, OLabelCompare<StdArc>()); 
     ComposeFstOptions<StdArc, PM> opts;
     opts.gc_limit = 0;
-    opts.matcher1 = new PM(*input1, MATCH_OUTPUT, phiLabel);
-    opts.matcher2 = new PM(*input2, MATCH_NONE, kNoLabel);
+    opts.matcher1 = new PM(*input1, MATCH_NONE, kNoLabel);
+    opts.matcher2 = new PM(*input2, MATCH_INPUT, phiLabel);
     // composition
     ComposeFst<StdArc> composed(*input1, *input2, opts);
     StdVectorFst output(composed);
+    output.SetInputSymbols(symbolMap);
     Connect(&output);
     output.Write("");
     delete symbolMap;
