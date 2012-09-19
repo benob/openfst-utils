@@ -40,6 +40,8 @@ cat sentence.fsm | ./fstcompose-phi '<phi>' model.fsm | fstprint
 3   4   here <eps>
 4
 
+* fstposteriors: compute arc-level posterior probabilities from an automaton where weights are -log probs in the tropical semiring.
+
 --- less useful / non-working stuff ---
 
 * add-tags <dict>: generate a tagging transducer from a word acceptor according to a tab-separated, one-word-per-line tag dictionary
