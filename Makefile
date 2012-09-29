@@ -1,5 +1,5 @@
 CPPFLAGS:=$(CFLAGS) -lfst -g -Wall -ldl
-all: fstcompile-nolex add-tags ngram-expand fstminimize-transducer fstdeterminize-tc-lex fstsuperfinal-noepsilon fstcompose-maplex fstoracle fstcompose-phi fstposteriors
+all: fstcompile-nolex add-tags ngram-expand fstminimize-transducer fstdeterminize-tc-lex fstsuperfinal-noepsilon fstcompose-maplex fstoracle fstposteriors fstcompose-specials
 %: %.cc
 	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
 clean: 

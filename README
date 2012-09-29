@@ -11,29 +11,29 @@ This is a set of useful programs for manipulating Finite State Transducer with t
 
 * fstminimize-transducer: encode input/output, rmepsilon, determinize, minimize and decode in one pass.
 
-* fstdeterminize-tc-lex: keep the best tagging for each word sequence in a transducer using determinization in the (Tropical, Categorial)-Lexicographic semiring. See "Efficient Determinization of Tagged Word Lattices using Categorial and Lexicographic Semirings", by Izhak Shafran et al, ASRU 2011.
+* fstdeterminize-tc-lex: keep the best output for each input sequence in a transducer using determinization in the (Tropical, Categorial)-Lexicographic semiring. See "Efficient Determinization of Tagged Word Lattices using Categorial and Lexicographic Semirings", by Izhak Shafran et al, ASRU 2011.
 
 * fstsuperfinal-noepsilon: add a superfinal state without adding epsilon arcs
 
 * fstoracle <fst1> <fst2>: compute the shortest distance alignment between two transducers
 
-* fstcompose-phi: compose two transducers where the second has phi (failure) transitions -- transitions that match anything if any other match was not possible.
+* fstcompose-specials <fst1> <fst2>: compose two transducers using special <phi>, <rho> and <sigma> transitions. <sigma> can replace any input symbol; <rho> is like sigma but only if no other path can be followed; <phi> is an epsilon transition which can be followed if no other transition matches an input symbol. Note that lexicons from the two fsts are mapped.
 
-sentence.fsm:
+fstprint sentence.fst:
 0   1   the
 1   2   boy
 2   3   is
 3   4   here
 4
 
-model.fsm:
-0   0   <phi> <eps>
+fstprint model.fst:
+0   0   <rho> <eps>
 0   1   boy XXX
 1   2   is YYY
-2   2   <phi> <eps>
+2   2   <rho> <eps>
 2
 
-cat sentence.fsm | ./fstcompose-phi '<phi>' model.fsm | fstprint
+./fstcompose-specials model.fst < sentence.fst | fstprint
 0   1   the <eps>
 1   2   boy XXX
 2   3   is YYY
