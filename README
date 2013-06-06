@@ -42,6 +42,8 @@ fstprint model.fst:
 
 * fstposteriors: compute arc-level posterior probabilities from an automaton where weights are -log probs in the tropical semiring.
 
+* fstprint-nbest-strings <n>: compute nbest and print string of input/output symbols (or input if input == output)
+
 --- less useful / non-working stuff ---
 
 * add-tags <dict>: generate a tagging transducer from a word acceptor according to a tab-separated, one-word-per-line tag dictionary
