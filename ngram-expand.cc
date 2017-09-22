@@ -14,7 +14,7 @@
 // Author: benoit.favre@lif.univ-mrs.fr (Benoit Favre)
 
 #include <fst/fstlib.h>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <list>
 
 using namespace fst;
@@ -48,7 +48,24 @@ struct Context {
         inputState = arc.nextstate;
         if(seq.size() > length) seq.pop_front();
     }
-    struct LabelsHash {
+    StdArc::Weight weight() const {
+        return seq.back().weight;
+    }
+    int64 ilabel() const {
+        return seq.back().ilabel;
+    }
+    int64 olabel() const {
+        return seq.back().ilabel;
+    }
+};
+
+// custom specialization of std::hash can be injected in namespace std
+namespace std
+{
+    template<> struct hash<Context>
+    {
+        typedef Context argument_type;
+        typedef size_t result_type;
         size_t operator()(const Context& a) const {
             size_t output = a.inputState;
             list<StdArc>::const_iterator i = a.seq.begin(); 
@@ -57,7 +74,11 @@ struct Context {
             return output;
         }
     };
-    struct LabelsEqual {
+    template <> struct equal_to<Context>
+    {
+        typedef Context first_argument_type;
+        typedef Context second_argument_type;
+        typedef size_t result_type;
         int operator()(const Context& a, const Context& b) const {
             if(a.inputState != b.inputState) return false;
             if(a.seq.size() != b.seq.size()) return false;
@@ -72,16 +93,7 @@ struct Context {
             return true;
         }
     };
-    StdArc::Weight weight() const {
-        return seq.back().weight;
-    }
-    int64 ilabel() const {
-        return seq.back().ilabel;
-    }
-    int64 olabel() const {
-        return seq.back().ilabel;
-    }
-};
+}
 
 int main(int argc, char** argv) {
 
@@ -95,7 +107,7 @@ int main(int argc, char** argv) {
     }
     StdVectorFst output;
 
-    unordered_map<Context, State, Context::LabelsHash, Context::LabelsEqual> outputStates;
+    unordered_map<Context, State> outputStates;
     list<Context> queue; // queue all unprocessed contexts
 
     State outputStart = 0;

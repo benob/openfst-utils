@@ -28,7 +28,7 @@ namespace fst {
      * operator (should not be used with other string weight operations)
      */
     typedef StringWeight<int, STRING_LEFT> CategorialWeight;
-    typedef StringWeightIterator<int, STRING_LEFT> CategorialWeightIterator;
+    typedef StringWeightIterator<CategorialWeight> CategorialWeightIterator;
     typedef LexicographicWeight<TropicalWeight, CategorialWeight> TCLexWeight;
     typedef LexicographicArc<TropicalWeight, CategorialWeight> TCLexArc;
     typedef VectorFst<TCLexArc> TCLexFst;
